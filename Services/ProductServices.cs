@@ -1,4 +1,5 @@
 ﻿using WebShop.Data;
+using WebShop.DTO;
 using WebShop.Models;
 
 namespace WebShop.Services
@@ -10,8 +11,19 @@ namespace WebShop.Services
         {
             _context = context;
         }
-        public async Task AddProduct(Product product)
+        public async Task AddProduct(ProductDTO dto)
         {
+            var product = new Product
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Price = dto.Price,
+                StockQuantity = dto.StockQuantity,
+                IsActive = dto.IsActive,
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
             try
             {
                 await _context.Products.AddAsync(product);
@@ -19,13 +31,15 @@ namespace WebShop.Services
             }
             catch
             {
-
             }
         }
 
-        public Task DeleteProduct(Guid id)
+        public async Task DeleteProduct(Guid id)
         {
-            throw new NotImplementedException();
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            product.IsActive = false;
+            product.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -39,14 +53,22 @@ namespace WebShop.Services
             return products;
         }
 
-        public Task<Product> GetProductById(Guid id)
+        public async Task<Product> GetProductById(Guid id)
         {
-            throw new NotImplementedException();
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            return product;
         }
 
-        public Task UpdateProduct(Product product)
+        public async Task UpdateProduct(Guid id, ProductDTO product)
         {
-            throw new NotImplementedException();
+            var existingProduct = _context.Products.FirstOrDefault(p => p.Id == id);
+            existingProduct.Name = product.Name;
+            existingProduct.Description = product.Description;
+            existingProduct.Price = product.Price;
+            existingProduct.StockQuantity = product.StockQuantity;
+            existingProduct.IsActive = product.IsActive;
+            existingProduct.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
         }
     }
 }

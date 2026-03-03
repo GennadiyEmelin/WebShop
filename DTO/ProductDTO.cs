@@ -17,7 +17,7 @@ namespace WebShop.DTO
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Введите количество товара!")]
-        [MinLength(0, ErrorMessage = "Количество товара не может быть отрицательным!")]
+        [Range(0, int.MaxValue, ErrorMessage = "Количество товара не может быть отрицательным!")]
         public int StockQuantity { get; set; }
 
         [Required]
