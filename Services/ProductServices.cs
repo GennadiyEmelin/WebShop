@@ -61,14 +61,18 @@ namespace WebShop.Services
 
         public async Task UpdateProduct(Guid id, ProductDTO product)
         {
-            var existingProduct = _context.Products.FirstOrDefault(p => p.Id == id);
-            existingProduct.Name = product.Name;
-            existingProduct.Description = product.Description;
-            existingProduct.Price = product.Price;
-            existingProduct.StockQuantity = product.StockQuantity;
-            existingProduct.IsActive = product.IsActive;
-            existingProduct.UpdatedAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            try
+            {
+                var existingProduct = _context.Products.FirstOrDefault(p => p.Id == id);
+                existingProduct.Name = product.Name;
+                existingProduct.Description = product.Description;
+                existingProduct.Price = product.Price;
+                existingProduct.StockQuantity = product.StockQuantity;
+                existingProduct.IsActive = product.IsActive;
+                existingProduct.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            } 
+            catch { }
         }
     }
 }

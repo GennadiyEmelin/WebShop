@@ -52,6 +52,24 @@ namespace WebShop.Controllers
             }
         }
 
+        [HttpGet("GetProductById/{id}")]
+        public async Task<IActionResult> GetProductById(Guid id)
+        {
+            try
+            {
+                var product = await _productServices.GetProductById(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                return Ok(product);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Произошла ошибка при получении продукта.");
+            }
+        }
+
         [HttpDelete("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
@@ -87,6 +105,11 @@ namespace WebShop.Controllers
             }
             try
             {
+                var existingProduct = await _productServices.GetProductById(id);
+                if(existingProduct == null)
+                {
+                    return NotFound();
+                }
                 await _productServices.UpdateProduct(id, dto);
                 return Ok();
             }
