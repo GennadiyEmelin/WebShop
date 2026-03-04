@@ -15,7 +15,7 @@ namespace WebShop.Controllers
             _orderServices = orderServices;
         }
 
-        [HttpPost("CreateOrder")]
+        [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO order)
         {
             if (!ModelState.IsValid)
@@ -33,7 +33,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpDelete("DeleteOrder/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
             try
@@ -49,7 +49,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpGet("GetOrderById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
             try
@@ -63,7 +63,7 @@ namespace WebShop.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpGet("GetAllOrders")]
+        [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {
             try
@@ -77,7 +77,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpPut("UpdateOrder/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] OrderDTO order)
         {
             if (!ModelState.IsValid)

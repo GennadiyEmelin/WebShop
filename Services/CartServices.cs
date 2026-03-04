@@ -35,7 +35,7 @@ namespace WebShop.Services
                         }
                     },
                 };
-                _context.Carts.Add(existingCart);
+                await _context.Carts.AddAsync(existingCart);
             }
             else if (existingCart == null && !product.IsActive)
             {
@@ -43,7 +43,7 @@ namespace WebShop.Services
             }
             else
             {
-                var existingCartItem = existingCart.Items.FirstOrDefault(item =>
+                var existingCartItem =  existingCart.Items.FirstOrDefault(item =>
                     item.ProductId == product.Id);
 
                 if (existingCartItem == null)
@@ -56,6 +56,7 @@ namespace WebShop.Services
                         Quantity = 1,
                         UnitPrice = product.Price
                     };
+                    existingCart.Items.Add(newCartItem);
                     _context.CartItems.Add(newCartItem);
                 }
                 else
@@ -71,10 +72,9 @@ namespace WebShop.Services
         {
             var cart = await _context.Carts
                 .FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null) return;
             var cartItems = await _context.CartItems
                 .Where(ci => ci.CartId == cart.Id).ToListAsync();
-            if (cart == null) return;
-            if (cartItems == null) return;
             _context.CartItems.RemoveRange(cartItems);
             _context.Carts.Remove(cart);
             await _context.SaveChangesAsync();
@@ -84,11 +84,11 @@ namespace WebShop.Services
         {
             var cart = await _context.Carts
                 .Include(c => c.Items)
-                .FirstOrDefaultAsync(c => c.UserId == userId);   
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null) return;
             var cartItem = await _context.CartItems
                 .FirstOrDefaultAsync(ci => ci.Cart.UserId == userId && ci.ProductId == productId);
             if (cartItem == null) return;
-            if (cart == null) return;
             cartItem.Quantity--;
             if(cartItem.Quantity == 0)
             {

@@ -18,8 +18,8 @@ namespace WebShop.Controllers
             _cartServices = cartServices;
         }
 
-        [HttpPost("AddToCart/{productId}")]
-        public async Task<IActionResult> AddToCart(Guid productId, string UserId)
+        [HttpPost("{productId}")]
+        public async Task<IActionResult> AddToCart(Guid productId, [FromQuery]string UserId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpGet("GetCart/{UserId}")]
+        [HttpGet]
         public async Task<ActionResult<CartResponseDTO>> GetCart(string UserId)
         {
             try
@@ -55,7 +55,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpPost("SubstractFromCart/{productId}")]
+        [HttpPatch("{productId}")]
         public async Task<IActionResult> SubstractFromCart(Guid productId, string UserId)
         {
             try
@@ -69,7 +69,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpDelete("ClearCart/{UserId}")]
+        [HttpDelete("{UserId}")]
         public async Task<IActionResult> DeleteCart(string UserId)
         {
             try

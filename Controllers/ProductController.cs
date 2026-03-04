@@ -16,7 +16,7 @@ namespace WebShop.Controllers
             _productServices = productServices;
         }
 
-        [HttpPost("CreateProduct")]
+        [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDTO dto)
         {
             if (!ModelState.IsValid)
@@ -38,7 +38,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpGet("GetAllProducts")]
+        [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
             try
@@ -52,7 +52,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpGet("GetProductById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(Guid id)
         {
             try
@@ -70,13 +70,13 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpDelete("DeleteProduct/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var product = await _productServices.GetProductById(id);
             if (product == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             if (id == Guid.Empty)
             {
@@ -93,7 +93,7 @@ namespace WebShop.Controllers
             }
         }
 
-        [HttpPut("UpdateProduct/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductDTO dto)
         {
             if (!ModelState.IsValid)

@@ -1,4 +1,5 @@
-﻿using WebShop.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WebShop.Data;
 using WebShop.DTO;
 using WebShop.Models;
 
@@ -24,19 +25,14 @@ namespace WebShop.Services
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            try
-            {
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-            }
-            catch
-            {
-            }
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteProduct(Guid id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null) return;
             product.IsActive = false;
             product.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
@@ -44,35 +40,27 @@ namespace WebShop.Services
 
         public async Task<List<Product>> GetAllProducts()
         {
-            var products = new List<Product>();
-            await foreach (var product in _context.Products)
-            {
-                if(product.IsActive == false) continue;
-                products.Add(product);
-            }
-            return products;
+            return await _context.Products
+                .Where(p => p.IsActive)
+                .ToListAsync();
         }
 
         public async Task<Product> GetProductById(Guid id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }
 
         public async Task UpdateProduct(Guid id, ProductDTO product)
         {
-            try
-            {
-                var existingProduct = _context.Products.FirstOrDefault(p => p.Id == id);
-                existingProduct.Name = product.Name;
-                existingProduct.Description = product.Description;
-                existingProduct.Price = product.Price;
-                existingProduct.StockQuantity = product.StockQuantity;
-                existingProduct.IsActive = product.IsActive;
-                existingProduct.UpdatedAt = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            } 
-            catch { }
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            existingProduct.Name = product.Name;
+            existingProduct.Description = product.Description;
+            existingProduct.Price = product.Price;
+            existingProduct.StockQuantity = product.StockQuantity;
+            existingProduct.IsActive = product.IsActive;
+            existingProduct.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
         }
     }
 }
