@@ -11,7 +11,7 @@ using WebShop.Data;
 namespace WebShop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260303172425_Init")]
+    [Migration("20260304155622_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -29,7 +29,8 @@ namespace WebShop.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
