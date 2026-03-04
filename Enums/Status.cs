@@ -3,12 +3,11 @@
     public enum Status
     {
         Created = 0,
-        AwaitingPayment = 5,
-        Paid = 10,
-        Processing = 15,
-        Shipped = 20,
-        Delivered = 25,
-        Cancelled = 30,
-        Refunded = 35
+        Paid = 5,
+        Processing = 10,
+        Shipped = 15,
+        Delivered = 20,
+        Cancelled = 25,
+        Refunded = 30
     }
 }
