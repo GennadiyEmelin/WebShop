@@ -119,6 +119,7 @@ namespace WebShop.Services
             return await _context.Carts
                 .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.UserId == UserId);
         }
     }

@@ -79,6 +79,7 @@ namespace WebShop.Services
             var orders = await _context.Orders
                 .Include(o => o.Items)
                 .ThenInclude(i => i.Product)
+                .AsNoTracking()
                 .Select(o => new OrderResponseDTO
                 {
                     UserId = o.UserId,
@@ -99,6 +100,7 @@ namespace WebShop.Services
         public async Task<OrderResponseDTO> GetById(Guid id)
         {
             var dto = await _context.Orders
+                .AsNoTracking()
                 .Where(o => o.Id == id)
                 .Select(o => new OrderResponseDTO
                 {

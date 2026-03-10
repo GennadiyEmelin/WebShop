@@ -41,13 +41,14 @@ namespace WebShop.Services
         public async Task<List<Product>> GetAllProducts()
         {
             return await _context.Products
+                .AsNoTracking()
                 .Where(p => p.IsActive)
                 .ToListAsync();
         }
 
         public async Task<Product> GetProductById(Guid id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }
 
